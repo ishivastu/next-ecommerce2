@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import Coupon from "@/models/coupon.model.js";
+import Coupon from "@/models/coupons.model.js";
 import { protectRoute } from "@/middlewares/auth.middleware.js";
 import connectDB from "@/lib/db.js";
 
-connectDB();
-
 export const GET = async () => {
   try {
+    await connectDB();
     const user = await protectRoute();
     
     if (user instanceof NextResponse) {
@@ -19,12 +18,12 @@ export const GET = async () => {
           success: false,
           error: "Non admin Unauthorized",
         },
-        { status: 401 }
+        { status: 403 }
       );
     }
-    const coupons = await Coupon.find({userId=user._id},{isActive:true});
+    const coupons = await Coupon.find({ userId: user._id, isActive: true });
 
-    if(!coupons){
+    if (!coupons || coupons.length === 0){
       return NextResponse.json(
         {
           success: false,
@@ -41,6 +40,7 @@ export const GET = async () => {
       { status: 200 }
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
