@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import Coupon from "@/models/coupon.model.js";
+import Coupon from "@/models/coupons.model.js";
 import { protectRoute } from "@/middlewares/auth.middleware.js";
 import connectDB from "@/lib/db.js";
 
@@ -8,7 +8,7 @@ connectDB();
 export const GET = async () => {
   try {
     const user = await protectRoute();
-    
+
     if (user instanceof NextResponse) {
       return user;
     }
@@ -17,14 +17,18 @@ export const GET = async () => {
       return NextResponse.json(
         {
           success: false,
-          error: "Non admin Unauthorized",
+          error: "Forbidden",
         },
-        { status: 401 }
+        { status: 403 }
       );
     }
-    const coupons = await Coupon.find({userId=user._id},{isActive:true});
 
-    if(!coupons){
+    const coupons = await Coupon.find({
+      userId: user._id,
+      isActive: true,
+    });
+
+    if (coupons.length === 0) {
       return NextResponse.json(
         {
           success: false,
@@ -33,6 +37,7 @@ export const GET = async () => {
         { status: 404 }
       );
     }
+
     return NextResponse.json(
       {
         success: true,
@@ -41,6 +46,8 @@ export const GET = async () => {
       { status: 200 }
     );
   } catch (error) {
+    console.error("GET Coupons Error:", error);
+
     return NextResponse.json(
       {
         success: false,
