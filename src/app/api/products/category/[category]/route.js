@@ -6,7 +6,18 @@ connectDB();
 export const GET=async(req,{params})=>{
   try {
 
-    const {category}= params;
+    const {category}=await params;
+
+         const {category} = await params;
+    
+    if (!category || typeof category !== 'string' || category.trim() === '') {
+      return NextResponse.json(
+        { success: false, error: "Invalid category parameter" },
+        { status: 400 }
+      );
+    }
+    
+     const products= await Product.find({category});
     const products= await Product.find({category});
     return NextResponse.json(
       {
@@ -21,7 +32,7 @@ export const GET=async(req,{params})=>{
     return NextResponse.json(
       {
         success: false,
-        error: "Something went wrong"
+        error: "failed to fetch products"
       },
       { status: 500 }
     );
