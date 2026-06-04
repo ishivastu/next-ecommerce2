@@ -34,7 +34,7 @@ export const POST = async (req) => {
       );
     }
 
-    await Order.findOneAndUpdate(
+    const updatedOrder = await Order.findOneAndUpdate(
       {
         razorpayOrderId: razorpay_order_id,
       },
@@ -44,6 +44,15 @@ export const POST = async (req) => {
       }
     );
 
+    if(!updatedOrder){
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Order not found",
+        },
+        { status: 404 }
+      );
+    }
     return NextResponse.json(
       {
         success: true,
