@@ -9,7 +9,9 @@ connectDB();
 
 export const DELETE = async (req, { params }) => {
   try {
-    const productId = params.id;
+    const {id:productId} =await params;
+
+    console.log(productId);
 
     const user = await protectRoute();
 
@@ -27,6 +29,8 @@ export const DELETE = async (req, { params }) => {
       );
     }
 
+    console.log(productId);
+
     const product = await Product.findById(productId);
 
     if (!product) {
@@ -34,6 +38,7 @@ export const DELETE = async (req, { params }) => {
         {
           success: false,
           error: "Product not found",
+          productId: productId
         },
         { status: 404 }
       );
@@ -114,6 +119,7 @@ export const PUT=async(req,{params})=>{
       {
         success: true,
         message: "featured toggled",
+        isFeatured:product.isFeatured
       },
       { status: 200 }
     );

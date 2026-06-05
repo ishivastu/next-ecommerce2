@@ -14,19 +14,11 @@ import redis from "@/lib/redis.js";
 
 export const POST = async (req) => {
   try {
-    console.time("TOTAL_LOGIN");
-
-    console.time("connectDB");
     await connectDB();
-    console.timeEnd("connectDB");
 
-    console.time("req.json");
     const { email, password } = await req.json();
-    console.timeEnd("req.json");
 
-    console.time("findUser");
     const user = await User.findOne({ email });
-    console.timeEnd("findUser");
 
     if (!user) {
       return NextResponse.json(
@@ -38,12 +30,10 @@ export const POST = async (req) => {
       );
     }
 
-    console.time("bcrypt.compare");
     const isMatch = await bcrypt.compare(
       password,
       user.password
     );
-    console.timeEnd("bcrypt.compare");
 
     if (!isMatch) {
       return NextResponse.json(
@@ -55,16 +45,11 @@ export const POST = async (req) => {
       );
     }
 
-    console.time("generateTokens");
-    const accessToken = generateAccessToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
-    console.timeEnd("generateTokens");
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
-    console.time("setCookies");
     await setCookies(accessToken, refreshToken);
-    console.timeEnd("setCookies");
 
-    console.time("redis.set");
     await redis.set(
       `refreshToken:${user._id}`,
       refreshToken,
@@ -72,9 +57,6 @@ export const POST = async (req) => {
         ex: 60 * 60 * 24 * 7,
       }
     );
-    console.timeEnd("redis.set");
-
-    console.timeEnd("TOTAL_LOGIN");
 
     return NextResponse.json(
       {
@@ -95,7 +77,7 @@ export const POST = async (req) => {
     return NextResponse.json(
       {
         success: false,
-        error: "Something went wrong",
+        error: error.message,
       },
       { status: 500 }
     );

@@ -1,19 +1,19 @@
 import jwt from "jsonwebtoken"
 import { cookies } from "next/headers"
 
-export const generateAccessToken = (userId) => {
+export const generateAccessToken = (user) => {
 
    return jwt.sign(
-      { userId },
+      { userId: user._id ,role:user.role},
       process.env.ACCESS_TOKEN_SECRET_KEY,
       { expiresIn: "30m" }
    )
 }
 
-export const generateRefreshToken = (userId) => {
+export const generateRefreshToken = (user) => {
 
    return jwt.sign(
-      { userId },
+      { userId:user._id ,role:user.role},
       process.env.REFRESH_TOKEN_SECRET_KEY,
       { expiresIn: "7d" }
    )
