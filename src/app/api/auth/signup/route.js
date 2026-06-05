@@ -20,7 +20,7 @@ export const POST = async (req) => {
 
     if(password.length < 6){
       return NextResponse.json(
-        { error: "Password must be at least 6 characters" },
+        { message: "Password must be at least 6 characters" },
         { status: 400 }
       );
     }
@@ -29,7 +29,7 @@ export const POST = async (req) => {
 
     if (user) {
       return NextResponse.json(
-        { error: "User already exists" },
+        { message: "User already exists" },
         { status: 400 }
       );
     }
@@ -56,7 +56,7 @@ export const POST = async (req) => {
     console.log(error);
 
     return NextResponse.json(
-      { error: "Something went wrong" },
+      { message: error.message },
       { status: 500 }
     );
   }
