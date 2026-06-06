@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import razorpay from "@/lib/razorpay";
 import Order from "@/models/order.model";
-import Coupon from "@/models/coupon.model";
+import Coupon from "@/models/coupons.model";
 import { protectRoute } from "@/middlewares/auth.middleware";
 
 export const POST = async (req) => {
