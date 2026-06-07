@@ -15,14 +15,6 @@ const LoginPage = () => {
 
   const {user,login,loading,checkAuth}=useUserStore();
 
-  useEffect(()=>{
-    checkAuth();
-    if(user) router.push("/")
-  },[user])
-const store = useUserStore();
-
-console.log(store);
-
 
 	const handleSubmit = (e) => {
 		e.preventDefault();

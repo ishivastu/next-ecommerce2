@@ -13,16 +13,6 @@ export const GET = async () => {
       return user;
     }
 
-    if (user.role !== "admin") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Forbidden",
-        },
-        { status: 403 }
-      );
-    }
-
     const coupons = await Coupon.find({
       userId: user._id,
       isActive: true,
@@ -51,7 +41,7 @@ export const GET = async () => {
     return NextResponse.json(
       {
         success: false,
-        error: "Something went wrong",
+        error: error.message,
       },
       { status: 500 }
     );

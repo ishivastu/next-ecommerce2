@@ -1,3 +1,6 @@
+import { NextResponse } from "next/server";
+import { protectRoute } from "@/middlewares/auth.middleware.js";
+
 export const PUT = async (req, { params }) => {
   try {
     const { id: productId } = await params;
@@ -6,16 +9,6 @@ export const PUT = async (req, { params }) => {
 
     if (user instanceof NextResponse) {
       return user;
-    }
-
-    if (user.role !== "user") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Non user Unauthorized",
-        },
-        { status: 401 }
-      );
     }
 
     const { quantity } = await req.json();

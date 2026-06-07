@@ -13,16 +13,6 @@ export const GET = async () => {
       return user;
     }
 
-    if (user.role !== "user") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Unauthorized",
-        },
-        { status: 401 }
-      );
-    }
-
     const productIds = user.cartItems.map(
       (item) => item.productId
     );
@@ -56,13 +46,12 @@ export const GET = async () => {
     return NextResponse.json(
       {
         success: false,
-        error: "Something went wrong",
+        error: error.message,
       },
       { status: 500 }
     );
   }
 };
-
 export const POST = async (req) => {
   try {
     const user = await protectRoute();
@@ -71,27 +60,27 @@ export const POST = async (req) => {
       return user;
     }
 
-    if (user.role !== "user") {
+    const { productId } = await req.json();
+
+    if (!productId) {
       return NextResponse.json(
         {
           success: false,
-          error: "Non user Unauthorized",
+          error: "Product ID is required",
         },
-        { status: 401 }
+        { status: 400 }
       );
     }
 
-    const { cartId } = await req.json();
-
     const existingCart = user.cartItems.find(
-      (item) => item.productId.toString() === cartId
+      (item) => item.productId.toString() === productId
     );
 
     if (existingCart) {
       existingCart.quantity += 1;
     } else {
       user.cartItems.push({
-        productId: cartId,
+        productId,
         quantity: 1,
       });
     }
@@ -106,12 +95,12 @@ export const POST = async (req) => {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    console.error("Error adding to cart:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error: "Something went wrong",
+        error: error.message,
       },
       { status: 500 }
     );
@@ -161,7 +150,7 @@ export const DELETE = async (req) => {
     return NextResponse.json(
       {
         success: false,
-        error: "Something went wrong",
+        error: error.message,
       },
       { status: 500 }
     );

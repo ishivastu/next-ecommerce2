@@ -6,7 +6,7 @@ connectDB();
 export const GET=async(req,{params})=>{
   try {
 
-    const {category}= params;
+    const {category}=await params;
     const products= await Product.find({category});
     return NextResponse.json(
       {
