@@ -5,6 +5,7 @@ import axios from "@/lib/axios";
 export const useProductStore = create((set) => ({
 	products: [],
 	loading: false,
+  hasfetched: false,
 
 	setProducts: (products) => set({ products }),
 	createProduct: async (productData) => {
@@ -65,13 +66,13 @@ try {
 	},
 
   fetchProductsByCategory: async (category) => {
-    set({ loading: true });
+    set({ loading: true,hasfetched:false });
     try {
       const res = await axios.get(`/products/category/${category}`);
-      set({ products: res.data.data, loading: false });
+      set({ products: res.data.data, loading: false,hasfetched:true });
     } catch (error) {
       toast.error(error.response.data.error);
-      set({ loading: false });
+      set({ loading: false,hasfetched:true });
     }
   },
 }));

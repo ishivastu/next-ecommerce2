@@ -16,13 +16,6 @@ const Home=()=>{
 	{ href: "/jackets", name: "Jackets", imageUrl: "/jackets.jpg" },
 	{ href: "/suits", name: "Suits", imageUrl: "/suits.jpg" },
 	{ href: "/bags", name: "Bags", imageUrl: "/bags.jpg" }];
-useEffect(() => {
-  checkAuth();
-}, [checkAuth]);
-
-useEffect(() => {
-  getCartItems();
-}, [getCartItems]);
 
     return (
     <div className='relative min-h-screen text-white overflow-hidden'>

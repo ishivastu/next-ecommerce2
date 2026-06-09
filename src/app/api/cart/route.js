@@ -61,6 +61,8 @@ export const POST = async (req) => {
     }
 
     const { productId } = await req.json();
+    console.log("productId:", productId);
+console.log("Before:", user.cartItems);
 
     if (!productId) {
       return NextResponse.json(
@@ -84,8 +86,11 @@ export const POST = async (req) => {
         quantity: 1,
       });
     }
+    console.log("After push:", user.cartItems);
 
     await user.save();
+
+    console.log("After save:", user.cartItems);
 
     return NextResponse.json(
       {
@@ -115,17 +120,10 @@ export const DELETE = async (req) => {
       return user;
     }
 
-    if (user.role !== "user") {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Unauthorized",
-        },
-        { status: 401 }
-      );
-    }
-
     const { productId } = await req.json();
+
+    console.log("productId:", productId);
+console.log("Before:", user.cartItems);
 
     if (!productId) {
       user.cartItems = [];
@@ -135,7 +133,11 @@ export const DELETE = async (req) => {
       );
     }
 
+    console.log("After push:", user.cartItems);
+
     await user.save();
+
+    console.log("After save:", user.cartItems);
 
     return NextResponse.json(
       {

@@ -18,12 +18,10 @@ const orderSchema = new mongoose.Schema(
         quantity: {
           type: Number,
           required: true,
-          min: 1,
         },
         price: {
           type: Number,
           required: true,
-          min: 0,
         },
       },
     ],
@@ -31,21 +29,11 @@ const orderSchema = new mongoose.Schema(
     totalAmount: {
       type: Number,
       required: true,
-      min: 0,
     },
 
-    razorpayOrderId: {
-      type: String,
-      unique: true,
-    },
-
-    razorpayPaymentId: {
-      type: String,
-    },
-
-    razorpaySignature: {
-      type: String,
-    },
+    razorpayOrderId: String,
+    razorpayPaymentId: String,
+    razorpaySignature: String,
 
     paymentStatus: {
       type: String,
@@ -53,7 +41,9 @@ const orderSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 export default mongoose.models.Order ||

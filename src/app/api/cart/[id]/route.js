@@ -48,7 +48,7 @@ export const PUT = async (req, { params }) => {
     return NextResponse.json(
       {
         success: false,
-        error: "Something went wrong",
+        error: error.message,
       },
       { status: 500 }
     );

@@ -7,6 +7,7 @@ import { LogIn, Mail, Lock, ArrowRight, Loader } from "lucide-react";
 import useUserStore from "@/store/useAuthstore.js"
 import {useEffect} from "react"
 import {useRouter} from "next/navigation"
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const LoginPage = () => {
 	const [email, setEmail] = useState("");
@@ -15,11 +16,18 @@ const LoginPage = () => {
 
   const {user,login,loading,checkAuth}=useUserStore();
 
+  if(loading){
+    return <LoadingSpinner/>
+  }
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-    login(email,password);
-	};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await login(email, password);
+    checkAuth();
+    router.push("/");
+  };
+
+
 
 	return (
 		<div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
