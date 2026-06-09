@@ -35,6 +35,8 @@ const OrderSummary = () => {
 	}
 
 	const handlePayment = async () => {
+    if (isProcessingPayment) return;
+    setIsProcessingPayment(true);
 		try {
 			const res = await axios.post(
 				"/payments/create-order",
@@ -110,6 +112,7 @@ const OrderSummary = () => {
 
 				modal: {
 					ondismiss: () => {
+            setIsProcessingPayment(false);
 						toast.error(
 							"Payment cancelled"
 						);
@@ -127,7 +130,7 @@ const OrderSummary = () => {
 			razorpay.open();
 		} catch (error) {
 			console.error(error);
-
+      setIsProcessingPayment(false);
 			toast.error(
 				"Failed to initiate payment"
 			);

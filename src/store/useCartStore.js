@@ -32,7 +32,8 @@ export const useCartStore = create((set, get) => ({
 			subtotal: 0,
 		});
 	} catch (error) {
-		toast.error("Failed to clear cart");
+		toast.error(error.response?.data?.message || "Failed to clear cart");
+    throw error;
 	}
 },
 
