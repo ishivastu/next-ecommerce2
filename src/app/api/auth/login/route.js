@@ -45,8 +45,8 @@ export const POST = async (req) => {
       );
     }
 
-    const accessToken = generateAccessToken(user);
-    const refreshToken = generateRefreshToken(user);
+    const accessToken = generateAccessToken(user._id,user.role);
+    const refreshToken = generateRefreshToken(user._id,user.role);
 
     await setCookies(accessToken, refreshToken);
 

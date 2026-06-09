@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+
 export function proxy(request) {
   const token = request.cookies.get("accessToken")?.value;
   const pathname = request.nextUrl.pathname;
+
   // Redirect logged-in users away from login/signup
   if (pathname === "/login" || pathname === "/signup") {
     if (token) {
@@ -11,13 +13,15 @@ export function proxy(request) {
       );
     }
   }
-  // Protected routes
+
+  // Routes that require authentication
   const protectedRoutes = [
     "/cart",
     "/purchase-success",
     "/purchase-cancel",
-    "/"
+    "/secret-dashboard",
   ];
+
   if (protectedRoutes.includes(pathname)) {
     if (!token) {
       return NextResponse.redirect(
@@ -25,19 +29,15 @@ export function proxy(request) {
       );
     }
   }
-  // Admin route
+
+  // Admin-only route
   if (pathname === "/secret-dashboard") {
-    if (!token) {
-      return NextResponse.redirect(
-        new URL("/login", request.url)
-      );
-    }
     try {
       const decoded = jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET_KEY
       );
-      
+
       if (decoded.role !== "admin") {
         return NextResponse.redirect(
           new URL("/", request.url)
@@ -49,8 +49,10 @@ export function proxy(request) {
       );
     }
   }
+
   return NextResponse.next();
 }
+
 export const config = {
   matcher: [
     "/",
@@ -62,4 +64,3 @@ export const config = {
     "/secret-dashboard",
   ],
 };
-
