@@ -23,8 +23,10 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await login(email, password);
-    checkAuth();
-    router.push("/");
+    await checkAuth();
+    if(user){
+      router.push("/");
+    }
   };
 
 

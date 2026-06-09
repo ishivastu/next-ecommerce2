@@ -34,8 +34,8 @@ export const POST=async()=>{
         { status: 401 }
       );
     }
-    
-    const accessToken = generateAccessToken(decoded.userId);
+
+    const accessToken = generateAccessToken(decoded.userId,decoded.role);
 
     setCookies(accessToken);
 
@@ -43,7 +43,7 @@ export const POST=async()=>{
       { accessToken },
       { status: 200 }
     );
-    
+
   } catch (error) {
 
     console.log(error);
@@ -51,6 +51,6 @@ export const POST=async()=>{
       { error: "Internal server error" },
       { status: 500 }
     );
-    
+
   }
 }

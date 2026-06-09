@@ -5,7 +5,7 @@ import useUserStore from "@/store/useAuthstore";
 import { useCartStore } from "@/store/useCartStore";
 
 export default function AppProvider({ children }) {
-  const { checkAuth } = useUserStore();
+  const { checkAuth, user } = useUserStore();
   const { getCartItems } = useCartStore();
 
   useEffect(() => {
@@ -13,8 +13,8 @@ export default function AppProvider({ children }) {
   }, [checkAuth]);
 
   useEffect(() => {
-    getCartItems();
-  }, [getCartItems]);
+    if (user) getCartItems();
+  }, [user, getCartItems]);
 
   return children;
 }
